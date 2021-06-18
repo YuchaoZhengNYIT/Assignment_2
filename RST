@@ -2,6 +2,7 @@
 import sys
 from scapy.all import *
 
+# 22 for ssh, 23 for telnet
 targetPort=22
 
 def spoof(pkt):
